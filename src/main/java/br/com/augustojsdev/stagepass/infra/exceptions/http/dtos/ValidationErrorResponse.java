@@ -14,14 +14,9 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 public class ValidationErrorResponse {
-
     private int statusCode;
-
     private String message;
-
     private Map<String, List<String>> errors;
-
     private OffsetDateTime timestamp;
-
     private String path;
 }

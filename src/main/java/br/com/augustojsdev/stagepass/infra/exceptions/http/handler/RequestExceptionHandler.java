@@ -3,6 +3,7 @@ package br.com.augustojsdev.stagepass.infra.exceptions.http.handler;
 import br.com.augustojsdev.stagepass.infra.exceptions.http.dtos.DefaultErrorResponse;
 import br.com.augustojsdev.stagepass.infra.exceptions.http.dtos.ValidationErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,13 +19,17 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RestController
+@Log4j2
 public class RequestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException exception,
+            MethodArgumentNotValidException ex,
             HttpServletRequest request) {
-        Map<String, List<String>> errors = exception
+
+        log.error("DTO validation error.: {}", ex.getMessage());
+
+        Map<String, List<String>> errors = ex
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -53,6 +58,8 @@ public class RequestExceptionHandler {
     public final ResponseEntity<DefaultErrorResponse> handleUnexpectedErrors(
             Exception ex,
             HttpServletRequest request) {
+
+        log.error("Unexpected error message.: {}", ex.getMessage());
 
         DefaultErrorResponse response = DefaultErrorResponse.builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())

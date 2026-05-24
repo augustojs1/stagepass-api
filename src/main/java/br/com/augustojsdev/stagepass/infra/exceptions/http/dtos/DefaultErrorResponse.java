@@ -12,14 +12,9 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 public class DefaultErrorResponse {
-
     private int statusCode;
-
     private String error;
-
     private String message;
-
     private OffsetDateTime timestamp;
-
     private String path;
 }

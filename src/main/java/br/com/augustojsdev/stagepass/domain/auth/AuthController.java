@@ -1,7 +1,7 @@
 package br.com.augustojsdev.stagepass.domain.auth;
 
 import br.com.augustojsdev.stagepass.domain.auth.dtos.SignUpDTO;
-import br.com.augustojsdev.stagepass.domain.users.entities.User;
+import br.com.augustojsdev.stagepass.domain.auth.dtos.SignUpResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> signUp(@RequestBody @Valid SignUpDTO signUpDTO) {
+    public ResponseEntity<SignUpResponseDTO> signUp(@RequestBody @Valid SignUpDTO signUpDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.signUp(signUpDTO));
     }
 }
