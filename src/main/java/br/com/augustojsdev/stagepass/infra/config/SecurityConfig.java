@@ -2,6 +2,7 @@ package br.com.augustojsdev.stagepass.infra.config;
 
 import br.com.augustojsdev.stagepass.domain.auth.providers.JwtProvider;
 import br.com.augustojsdev.stagepass.infra.filters.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,13 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
-
-    public SecurityConfig(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

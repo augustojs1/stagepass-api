@@ -31,23 +31,28 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public SignUpResponseDTO signUp(SignUpDTO signUpDTO) {
+    public SignInResponseDTO signUp(SignUpDTO signUpDTO) {
         log.info("Signing up -> {}", signUpDTO);
+
+        String originalPassword = signUpDTO.getPassword();
 
         signUpDTO.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
 
         User user = this.userService.create(signUpDTO);
 
-        return SignUpResponseDTO.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .build();
+        return this.signIn(
+                SignInDTO.builder()
+                        .email(user.getEmail())
+                        .password(originalPassword)
+                        .build()
+        );
     }
 
     public SignInResponseDTO signIn(SignInDTO signInDTO) {
         try {
             log.info("Signing in -> {}", signInDTO);
+
+            this.userService.findUserByEmail(signInDTO.getEmail());
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -55,8 +60,6 @@ public class AuthService {
                             signInDTO.getPassword()
                     )
             );
-
-            this.userService.findUserByEmail(authentication.getName());
 
             return this.jwtProvider.createAccessToken(
                     authentication.getName()
