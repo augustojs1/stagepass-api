@@ -1,5 +1,7 @@
 package br.com.augustojsdev.stagepass.domain.auth;
 
+import br.com.augustojsdev.stagepass.domain.auth.dtos.SignInDTO;
+import br.com.augustojsdev.stagepass.domain.auth.dtos.SignInResponseDTO;
 import br.com.augustojsdev.stagepass.domain.auth.dtos.SignUpDTO;
 import br.com.augustojsdev.stagepass.domain.auth.dtos.SignUpResponseDTO;
 import jakarta.validation.Valid;
@@ -21,5 +23,10 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ResponseEntity<SignUpResponseDTO> signUp(@RequestBody @Valid SignUpDTO signUpDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.signUp(signUpDTO));
+    }
+
+    @PostMapping("/sign-in")
+    public ResponseEntity<SignInResponseDTO> signIn(@RequestBody @Valid SignInDTO signInDTO) {
+        return ResponseEntity.ok(this.authService.signIn(signInDTO));
     }
 }

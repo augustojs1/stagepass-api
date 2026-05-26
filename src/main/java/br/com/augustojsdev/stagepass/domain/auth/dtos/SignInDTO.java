@@ -4,20 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @ToString
-public class SignUpDTO {
-
-    @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String lastName;
+public class SignInDTO {
 
     @NotBlank
     @Email

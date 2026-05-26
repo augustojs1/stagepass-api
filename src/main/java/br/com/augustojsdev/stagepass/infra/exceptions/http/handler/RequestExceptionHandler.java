@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -52,6 +53,24 @@ public class RequestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public final ResponseEntity<DefaultErrorResponse> handleResponseStatusException(
+            ResponseStatusException ex,
+            HttpServletRequest request) {
+
+        log.error("HTTP Request exception.: {}", ex.getMessage());
+
+        DefaultErrorResponse response = DefaultErrorResponse.builder()
+                .statusCode(ex.getStatusCode().value())
+                .error("Request error")
+                .message(ex.getMessage())
+                .timestamp(OffsetDateTime.now())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(ex.getStatusCode().value()).body(response);
     }
 
     @ExceptionHandler(Exception.class)
