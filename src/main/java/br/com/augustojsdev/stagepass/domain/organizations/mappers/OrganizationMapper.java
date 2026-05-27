@@ -5,7 +5,9 @@ import br.com.augustojsdev.stagepass.domain.organizations.dtos.OrganizationRespo
 import br.com.augustojsdev.stagepass.domain.organizations.entities.Organization;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class OrganizationMapper {
@@ -31,5 +33,9 @@ public class OrganizationMapper {
                 .contactEmail(organizationDTO.getContactEmail())
                 .websiteUrl(organizationDTO.getWebsiteUrl() != null ? organizationDTO.getWebsiteUrl() : null)
                 .build();
+    }
+
+    public List<OrganizationResponseDTO> fromEntityToOrganizationResponseDTO(List<Organization> organizations) {
+        return organizations.stream().map(this::fromEntityToOrganizationResponseDTO).collect(Collectors.toList());
     }
 }

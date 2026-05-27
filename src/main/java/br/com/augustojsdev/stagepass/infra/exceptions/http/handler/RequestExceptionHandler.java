@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
@@ -60,6 +61,7 @@ public class RequestExceptionHandler {
             ResponseStatusException ex,
             HttpServletRequest request) {
 
+        log.error(ex);
         log.error("HTTP Request exception.: {}", ex.getMessage());
 
         DefaultErrorResponse response = DefaultErrorResponse.builder()
@@ -78,12 +80,30 @@ public class RequestExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
-        log.error("Unexpected error message.: {}", ex.getMessage());
+        log.error(ex);
 
         DefaultErrorResponse response = DefaultErrorResponse.builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
                 .message("An unexpected error occurred. Please try again later.")
+                .timestamp(OffsetDateTime.now())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public final ResponseEntity<DefaultErrorResponse> handleMethodArgumentTypeMismatchException(
+            Exception ex,
+            HttpServletRequest request) {
+
+        log.error(ex);
+
+        DefaultErrorResponse response = DefaultErrorResponse.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .error("Request validation error.")
+                .message(ex.getMessage())
                 .timestamp(OffsetDateTime.now())
                 .path(request.getRequestURI())
                 .build();

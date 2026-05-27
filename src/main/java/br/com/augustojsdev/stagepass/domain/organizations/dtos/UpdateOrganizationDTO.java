@@ -1,6 +1,5 @@
 package br.com.augustojsdev.stagepass.domain.organizations.dtos;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Setter
@@ -8,16 +7,9 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class OrganizationDTO {
-
-    @NotBlank
+public class UpdateOrganizationDTO {
     private String name;
-
-    @NotBlank
     private String description;
-
-    @NotBlank
     private String contactEmail;
-
     private String websiteUrl;
 }
