@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -28,6 +30,11 @@ public class UserService implements UserDetailsService {
         log.info("Successfully created user!");
 
         return user;
+    }
+
+    public User findById(UUID id) {
+        return this.userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this id not found!"));
     }
 
     public User findUserByEmail(String email) {

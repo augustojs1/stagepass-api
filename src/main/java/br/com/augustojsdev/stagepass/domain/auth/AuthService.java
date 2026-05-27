@@ -50,7 +50,7 @@ public class AuthService {
 
     public SignInResponseDTO signIn(SignInDTO signInDTO) {
         try {
-            log.info("Signing in -> {}", signInDTO);
+            log.info("Signing in -> {}", signInDTO.getEmail());
 
             this.userService.findUserByEmail(signInDTO.getEmail());
 
