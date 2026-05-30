@@ -1,7 +1,9 @@
 package br.com.augustojsdev.stagepass.domain.categories;
 
 import br.com.augustojsdev.stagepass.domain.categories.dto.CategoryDTO;
+import br.com.augustojsdev.stagepass.domain.categories.dto.CategoryResponseDTO;
 import br.com.augustojsdev.stagepass.domain.categories.entities.Category;
+import br.com.augustojsdev.stagepass.domain.categories.mappers.CategoriesMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -17,8 +19,9 @@ import java.util.UUID;
 public class CategoriesService {
 
     private final CategoriesRepository categoriesRepository;
+    private final CategoriesMapper categoriesMapper;
 
-    public Category create(CategoryDTO categoryDTO) {
+    public CategoryResponseDTO create(CategoryDTO categoryDTO) {
         var existentCategory = this.categoriesRepository.findByName(categoryDTO.getName());
 
         if (existentCategory.isPresent()) {
@@ -26,22 +29,21 @@ public class CategoriesService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Resource with this name already exists!");
         }
 
-        Category newCategory = Category.builder()
-                .name(categoryDTO.getName())
+        Category newCategory = this.categoriesRepository.save(this.categoriesMapper.toEntity(categoryDTO));
+
+        log.info("Successfully created new category:: {}", newCategory);
+
+        return  CategoryResponseDTO.builder()
+                .id(newCategory.getId())
+                .name(newCategory.getName())
                 .build();
-
-        Category category = this.categoriesRepository.save(newCategory);
-
-        log.info("Successfully created new category:: {}", category);
-
-        return  category;
     }
 
-    public List<Category> findAll() {
-        return this.categoriesRepository.findAll();
+    public List<CategoryResponseDTO> findAll() {
+        return this.categoriesMapper.toCategoryResponseDTO(this.categoriesRepository.findAll());
     }
 
-    public Category update(UUID id, CategoryDTO categoryDTO) {
+    public CategoryResponseDTO update(UUID id, CategoryDTO categoryDTO) {
         Category existentCategory = this.categoriesRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource with this id does not exists!"));
 
@@ -58,7 +60,7 @@ public class CategoriesService {
 
         log.info("Successfully updated category:: {}", category);
 
-        return category;
+        return this.categoriesMapper.toCategoryResponseDTO(category);
     }
 
     public void delete(UUID id) {

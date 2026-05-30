@@ -1,7 +1,7 @@
 package br.com.augustojsdev.stagepass.domain.categories;
 
 import br.com.augustojsdev.stagepass.domain.categories.dto.CategoryDTO;
-import br.com.augustojsdev.stagepass.domain.categories.entities.Category;
+import br.com.augustojsdev.stagepass.domain.categories.dto.CategoryResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,23 +19,23 @@ public class CategoriesController {
     private final CategoriesService categoriesService;
 
     @PostMapping
-    public ResponseEntity<Category> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryResponseDTO> create(@RequestBody @Valid CategoryDTO categoryDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.categoriesService.create(categoryDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAll() {
+    public ResponseEntity<List<CategoryResponseDTO>> getAll() {
         return ResponseEntity.ok(this.categoriesService.findAll());
     }
 
     @PatchMapping("/{categoryId}")
-    public ResponseEntity<Category> updateById(@PathVariable UUID categoryId,
+    public ResponseEntity<CategoryResponseDTO> updateById(@PathVariable UUID categoryId,
                                                @RequestBody @Valid CategoryDTO categoryDTO) {
         return ResponseEntity.ok(this.categoriesService.update(categoryId, categoryDTO));
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Category> updateById(@PathVariable UUID categoryId) {
+    public ResponseEntity<CategoryResponseDTO> updateById(@PathVariable UUID categoryId) {
         this.categoriesService.delete(categoryId);
 
         return ResponseEntity.noContent().build();
