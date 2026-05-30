@@ -28,3 +28,27 @@ create table organizations (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+-- categories
+create table event_categories (
+   id UUID primary key default gen_random_uuid(),
+   name VARCHAR(100) unique not NULL,
+   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO event_categories (name)
+VALUES
+    ('Music'),
+    ('Sport'),
+    ('Exhibition'),
+    ('Business'),
+    ('Photography'),
+    ('Theater'),
+    ('Comedy'),
+    ('Cinema'),
+    ('Education'),
+    ('Gaming'),
+    ('Festival');
+
+create index event_categories_name_idx on event_categories (name);
